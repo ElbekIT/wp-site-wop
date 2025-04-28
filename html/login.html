@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kirish yoki Ro'yxatdan o'tish - Elbek Online Shop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Rubik', sans-serif;
+    }
+    body {
+      height: 100vh;
+      background: linear-gradient(135deg, #74ebd5, #acb6e5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .container {
+      background-color: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      overflow: hidden;
+      width: 700px;
+      max-width: 100%;
+      display: flex;
+      transition: all 0.6s ease-in-out;
+    }
+    .form-container {
+      padding: 40px;
+      flex: 1;
+      transition: transform 0.6s ease-in-out;
+    }
+    .form-container h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #3498db;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    .toggle {
+      background-color: #f1f1f1;
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 40px;
+    }
+    .toggle p {
+      margin-top: 10px;
+    }
+    .hidden {
+      display: none;
+    }
+    .fade-in {
+      animation: fadeIn 0.8s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="form-container fade-in" id="loginForm">
+      <h2>Kirish</h2>
+      <input type="text" id="loginUsername" placeholder="Foydalanuvchi ismi" required>
+      <input type="password" id="loginPassword" placeholder="Parol" required>
+      <button onclick="login()">Kirish</button>
+      <p>Yangi foydalanuvchi? <a href="#" onclick="toggleForm('register')">Ro'yxatdan o'ting</a></p>
+    </div>
+
+    <div class="form-container fade-in hidden" id="registerForm">
+      <h2>Ro'yxatdan o'tish</h2>
+      <input type="text" id="registerUsername" placeholder="Foydalanuvchi ismi" required>
+      <input type="password" id="registerPassword" placeholder="Parol" required>
+      <button onclick="register()">Ro'yxatdan o'tish</button>
+      <p>Allaqachon akkountingiz bormi? <a href="#" onclick="toggleForm('login')">Kirish</a></p>
+    </div>
+  </div>
+
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+
+    function toggleForm(formType) {
+      if (formType === 'register') {
+        loginForm.classList.add('hidden');
+        registerForm.classList.remove('hidden');
+      } else {
+        registerForm.classList.add('hidden');
+        loginForm.classList.remove('hidden');
+      }
+    }
+
+    function login() {
+      const username = document.getElementById('loginUsername').value.trim();
+      const password = document.getElementById('loginPassword').value.trim();
+
+      const savedUser = localStorage.getItem('username');
+      const savedPass = localStorage.getItem('password');
+
+      if (username === savedUser && password === savedPass) {
+        alert('Kirish muvaffaqiyatli!');
+        localStorage.setItem('loggedIn', 'true');
+        window.location.href = 'fikr.html'; // chat sahifaga yo'naltirish
+      } else {
+        alert('Xato login yoki parol!');
+      }
+    }
+
+    function register() {
+      const username = document.getElementById('registerUsername').value.trim();
+      const password = document.getElementById('registerPassword').value.trim();
+
+      if (username && password) {
+        localStorage.setItem('username', username);
+        localStorage.setItem('password', password);
+        localStorage.setItem('loggedIn', 'true');
+        alert('Ro‘yxatdan o‘tish muvaffaqiyatli!');
+        window.location.href = 'fikr.html'; // chat sahifaga yo'naltirish
+      } else {
+        alert('Iltimos, barcha maydonlarni to‘ldiring!');
+      }
+    }
+  </script>
+</body>
+</html>

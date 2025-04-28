@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Elbek Online Shop</title>
+  <link rel="icon" href="/img/ChatGPT Image 24 апр. 2025 г., 19_53_02.png" type="image/png">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #f4f4f9;
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      background-color: #2c3e50;
+      color: #ecf0f1;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      width: 100%;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .hamburger {
+      font-size: 24px;
+      cursor: pointer;
+      padding: 10px;
+      background: transparent;
+      border: none;
+      color: white;
+    }
+
+    /* Side menu */
+    .side-menu {
+      position: fixed;
+      top: 0;
+      left: -250px;
+      width: 250px;
+      height: 100%;
+      background-color: #34495e;
+      padding: 20px;
+      transition: left 0.3s ease;
+      z-index: 999;
+    }
+
+    .side-menu ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .side-menu li {
+      margin: 20px 0;
+    }
+
+    .side-menu a {
+      color: white;
+      text-decoration: none;
+      font-size: 18px;
+    }
+
+    .side-menu.open {
+      left: 0;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 998;
+      display: none;
+    }
+
+    .overlay.show {
+      display: block;
+    }
+
+    .banner {
+      position: relative;
+      width: 100%;
+      max-width: 1000px;
+      margin: 20px auto;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .banner-slider {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    .banner-slider img {
+      width: 100%;
+      flex-shrink: 0;
+    }
+
+    .nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.5);
+      border: none;
+      color: #fff;
+      font-size: 24px;
+      padding: 10px;
+      cursor: pointer;
+      z-index: 10;
+      border-radius: 50%;
+    }
+
+    .nav.left { left: 10px; }
+    .nav.right { right: 10px; }
+    .nav:hover { background: rgba(0, 0, 0, 0.8); }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      max-width: 1200px;
+      width: 100%;
+    }
+
+    .product {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+
+    .product:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .product img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .product-content { padding: 15px; }
+    .product-title { font-size: 18px; font-weight: bold; color: #34495e; margin-bottom: 8px; }
+    .product-price { color: #27ae60; font-size: 16px; margin-bottom: 10px; }
+    .product-desc { font-size: 14px; color: #7f8c8d; }
+
+    .welcome {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #3498db;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 5px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      animation: fadeInSlide 0.5s ease-in-out;
+      z-index: 1000;
+    }
+
+    @keyframes fadeInSlide {
+      from { opacity: 0; transform: translate(-50%, -20px); }
+      to { opacity: 1; transform: translate(-50%, 0); }
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 10px;
+      background-color: #f8f9fa;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      width: 100%;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #2c3e50;
+      font-weight: bold;
+    }
+
+    @keyframes blink {
+      0% { color: #2c3e50; }
+      50% { color: red; }
+      100% { color: #2c3e50; }
+    }
+  </style>
+  
+</head>
+<body>
+
+  
+  <!-- Side Menu & Overlay -->
+  <div class="side-menu" id="sideMenu">
+    <img src="/img/ChatGPT Image 24 апр. 2025 г., 19_53_02.png" alt="Logo" style="height: 100px; display: block; margin: 0 auto;">
+    <ul>
+      <li><a href="#" onclick="filterProducts('Hamma Tovarlar')"> 🛒 Hamma Tovarlar</a></li>
+      <li><a href="#" onclick="filterProducts('Kompyuter')">💻 Kompyuter</a></li>
+      <li><a href="#" onclick="filterProducts('O\'yinlar')">🎮 O'yinlar</a></li>
+      <li><a href="#" onclick="filterProducts('Telefonlar')">📱 Telefonlar</a></li>
+      <li><a href="#" onclick="filterProducts('Aksiyalar')">🛒 Aksiyalar</a></li>
+    </ul>
+    <footer style="margin-top: 20px; text-align: center; font-size: 14px; color: #ffffff; background-color: #2c3e50; padding: 10px;">
+      <p>Telefon: +998904063090</p>
+      <p>Manzil: Farg'ona viloyati, Marg'ilon shahar, Nilufar ko'chasi, 8a uy</p>
+    </footer>
+  </div>
+  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+  <header>
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+    
+    <div style="display: flex; align-items: center; gap: 15px;">
+      <img src="/img/ChatGPT Image 24 апр. 2025 г., 19_53_02.png" alt="Logo" style="height: 50px;">
+      <span>Elbek Online Shop</span>
+    </div>
+  </header>
+
+  
+
+  <!-- Headerda, hamburger yoniga qo'shamiz -->
+<div id="userAccount" style="cursor: pointer; font-size: 18px; display: none; position: relative; margin-right: 20px;">
+  <span id="accountName"></span>
+  <div id="accountOptions" style="display: none; position: absolute; top: 30px; right: 0; background: white; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); padding: 10px;">
+    <button onclick="logout()" style="border: none; background: #e74c3c; color: white; padding: 8px 15px; border-radius: 5px; cursor: pointer;">Akkauntni o'chirish</button>
+  </div>
+</div>
+
+
+  <nav>
+    <ul>
+      <li><a href="index.html">Bosh sahifa</a></li>
+      <li><a href="mening_buyurtmalarim.html" id="orders-link">Mening buyurtmalarim</a></li>
+      <li><a href="/html/fikr.html" id="orders-link">Fikr Bildirish</a></li>
+      <li><a href="/html/login.html" id="orders-link">Login</a></li>
+      <!-- <li><a href="/html/fikr.html" id="orders-link"></a></li> -->
+    </ul>
+  </nav>
+
+  <div class="banner">
+    <div class="banner-slider" id="slider">
+      <img src="/img/image.png" alt="Banner 1">
+      <img src="/img/ChatGPT Image 24 апр. 2025 г., 19_56_59.png" alt="Banner 2">
+      <img src="/img/image.png" alt="Banner 3">
+    </div>
+    <button class="nav left" onclick="prevSlide()">&#10094;</button>
+    <button class="nav right" onclick="nextSlide()">&#10095;</button>
+  </div>
+
+  <div class="products" id="productList">
+    <div class="product" data-category="Kompyuter" onclick="openProduct('Tovar 1', '200000', 'Bu juda yaxshi tovar.', 'img/img/40pggtek.png')">
+      <img src="img/img/40pggtek.png" alt="Tovar 1" />
+      <div class="product-content">
+        <div class="product-title">Tovar 1</div>
+        <div class="product-price">200 000 so'm</div>
+        <div class="product-desc">Bu juda yaxshi tovar.</div>
+      </div>
+    </div>
+  <!-- bu yerda ikkinchi tovardan boshlab ketadi -->
+   
+    </div>
+  </div>
+
+  <script>
+    // Katalog menyu funksiyasi
+    function toggleMenu() {
+      const menu = document.getElementById('sideMenu');
+      const overlay = document.getElementById('overlay');
+      menu.classList.toggle('open');
+      overlay.classList.toggle('show');
+    }
+
+    const slider = document.getElementById("slider");
+    const slides = slider.querySelectorAll("img");
+    let index = 0;
+
+    function showSlide(i) {
+      index = (i + slides.length) % slides.length;
+      slider.style.transform = `translateX(-${index * 100}%)`;
+    }
+
+    function nextSlide() { showSlide(index + 1); }
+    function prevSlide() { showSlide(index - 1); }
+
+    setInterval(() => { nextSlide(); }, 5000);
+
+    function openProduct(name, price, desc, image) {
+      localStorage.setItem("productName", name);
+      localStorage.setItem("productPrice", price);
+      localStorage.setItem("productDesc", desc);
+      localStorage.setItem("productImage", image);
+      window.location.href = "product.html";
+    }
+
+    if (localStorage.getItem('newOrders') === 'true') {
+      document.getElementById('orders-link').style.animation = 'blink 1s infinite';
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      if (!localStorage.getItem('welcomed')) {
+        const welcome = document.createElement('div');
+        welcome.className = 'welcome';
+        welcome.textContent = 'Xush kelibsiz Elbek Online Shop saytiga!';
+        document.body.appendChild(welcome);
+        setTimeout(() => welcome.remove(), 5000);
+        localStorage.setItem('welcomed', 'true');
+      }
+    });
+
+    // Filter products by category
+    function filterProducts(category) {
+      const products = document.querySelectorAll('.product');
+      products.forEach(product => {
+        // Agar "Hamma Tovarlar" tanlangan bo'lsa, barcha tovarlarni ko'rsatish
+        if (category === 'Hamma Tovarlar' || product.getAttribute('data-category') === category) {
+          product.style.display = 'block';
+        } else {
+          product.style.display = 'none';
+        }
+      });
+    }
+  </script>
+
+ 
+
+  <script>
+    // Disable right-click
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+    // Disable text selection and copying
+    document.addEventListener('copy', (e) => {
+      e.preventDefault();
+      const warning = document.createElement('div');
+      warning.textContent = "Yomon niyating bor, sani👀!";
+      warning.style.position = 'fixed';
+      warning.style.top = '50%';
+      warning.style.left = '50%';
+      warning.style.transform = 'translate(-50%, -50%)';
+      warning.style.background = '#e74c3c';
+      warning.style.color = '#fff';
+      warning.style.padding = '20px';
+      warning.style.borderRadius = '10px';
+      warning.style.boxShadow = '0 4px 10px rgba(0, 0, 0, 0.2)';
+      warning.style.animation = 'fadeOut 25s ease forwards';
+      document.body.appendChild(warning);
+      setTimeout(() => warning.remove(), 2000);
+    });
+
+    // Disable developer tools (basic obfuscation)
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'U')) {
+        e.preventDefault();
+      }
+    });
+
+    // Fade-out animation for warning
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes fadeOut {
+        0% { opacity: 1; }
+        100% { opacity: 0; }
+      }
+    `;
+    document.head.appendChild(style); 
+    
+  </script>
+  <script>
+    // Chatbot funksiyasi
+    const chatbotButton = document.createElement('button');
+    chatbotButton.textContent = '...';
+    chatbotButton.style.position = 'fixed';
+    chatbotButton.style.bottom = '20px';
+    chatbotButton.style.right = '20px';
+    chatbotButton.style.width = '50px';
+    chatbotButton.style.height = '50px';
+    chatbotButton.style.borderRadius = '50%';
+    chatbotButton.style.background = '#2c3e50';
+    chatbotButton.style.color = '#ecf0f1';
+    chatbotButton.style.border = 'none';
+    chatbotButton.style.boxShadow = '0 4px 10px rgba(0, 0, 0, 0.2)';
+    chatbotButton.style.cursor = 'pointer';
+    chatbotButton.style.fontSize = '24px';
+    chatbotButton.style.display = 'flex';
+    chatbotButton.style.alignItems = 'center';
+    chatbotButton.style.justifyContent = 'center';
+    chatbotButton.style.zIndex = '1000';
+
+    const chatbot = document.createElement('div');
+    chatbot.style.position = 'fixed';
+    chatbot.style.bottom = '80px';
+    chatbot.style.right = '20px';
+    chatbot.style.width = '300px';
+    chatbot.style.background = '#2c3e50';
+    chatbot.style.color = '#ecf0f1';
+    chatbot.style.borderRadius = '10px';
+    chatbot.style.boxShadow = '0 4px 10px rgba(0, 0, 0, 0.2)';
+    chatbot.style.overflow = 'hidden';
+    chatbot.style.display = 'none';
+    chatbot.style.flexDirection = 'column';
+    chatbot.style.zIndex = '1000';
+    chatbot.style.opacity = '0';
+    chatbot.style.transform = 'translateY(20px)';
+    chatbot.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+
+    const chatbotHeader = document.createElement('div');
+    chatbotHeader.style.background = '#34495e';
+    chatbotHeader.style.padding = '10px';
+    chatbotHeader.style.textAlign = 'center';
+    chatbotHeader.style.fontWeight = 'bold';
+    chatbotHeader.textContent = 'Savollar bormi?';
+
+    const chatbotMessages = document.createElement('div');
+    chatbotMessages.style.flex = '1';
+    chatbotMessages.style.padding = '10px';
+    chatbotMessages.style.overflowY = 'auto';
+    chatbotMessages.style.maxHeight = '200px';
+
+    const chatbotInputContainer = document.createElement('div');
+    chatbotInputContainer.style.display = 'flex';
+    chatbotInputContainer.style.borderTop = '1px solid #7f8c8d';
+
+    const chatbotInput = document.createElement('input');
+    chatbotInput.type = 'text';
+    chatbotInput.placeholder = 'Savolingizni yozing...';
+    chatbotInput.style.flex = '1';
+    chatbotInput.style.padding = '10px';
+    chatbotInput.style.border = 'none';
+    chatbotInput.style.outline = 'none';
+
+    const chatbotSendButton = document.createElement('button');
+    chatbotSendButton.textContent = 'Yuborish';
+    chatbotSendButton.style.background = '#27ae60';
+    chatbotSendButton.style.color = '#fff';
+    chatbotSendButton.style.border = 'none';
+    chatbotSendButton.style.padding = '10px';
+    chatbotSendButton.style.cursor = 'pointer';
+
+    chatbotInputContainer.appendChild(chatbotInput);
+    chatbotInputContainer.appendChild(chatbotSendButton);
+
+    chatbot.appendChild(chatbotHeader);
+    chatbot.appendChild(chatbotMessages);
+    chatbot.appendChild(chatbotInputContainer);
+
+    document.body.appendChild(chatbotButton);
+    document.body.appendChild(chatbot);
+
+    chatbotButton.addEventListener('click', () => {
+      if (chatbot.style.display === 'none' || chatbot.style.opacity === '0') {
+        chatbot.style.display = 'flex';
+        setTimeout(() => {
+          chatbot.style.opacity = '1';
+          chatbot.style.transform = 'translateY(0)';
+        }, 10);
+      } else {
+        chatbot.style.opacity = '0';
+        chatbot.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+          chatbot.style.display = 'none';
+        }, 300);
+      }
+    });
+
+    chatbotSendButton.addEventListener('click', () => {
+      const userMessage = chatbotInput.value.trim();
+      if (userMessage) {
+        const userMessageElement = document.createElement('div');
+        userMessageElement.style.marginBottom = '10px';
+        userMessageElement.style.textAlign = 'right';
+        userMessageElement.textContent = userMessage;
+        chatbotMessages.appendChild(userMessageElement);
+
+        const botMessageElement = document.createElement('div');
+        botMessageElement.style.marginBottom = '10px';
+        botMessageElement.style.textAlign = 'left';
+        botMessageElement.style.color = '#3498db';
+
+        // Javoblarni aniqlash
+        if (userMessage.toLowerCase().includes('salom')) {
+          botMessageElement.textContent = 'Salom! Sizga qanday yordam bera olaman?';
+        } else if (userMessage.toLowerCase().includes('sayt')) {
+          botMessageElement.textContent = 'Bu sayt Elbek Online Shop uchun yaratilgan. Siz bu yerdan mahsulotlar sotib olishingiz mumkin.';
+        } else if (userMessage.toLowerCase().includes('buyurtma')) {
+          botMessageElement.textContent = 'Buyurtmalar bo\'limiga o\'ting va buyurtmalaringizni ko\'ring.';
+        } else {
+          botMessageElement.textContent = 'Kechirasiz, bu savolga javob bera olmayman.';
+        }
+
+        chatbotMessages.appendChild(botMessageElement);
+        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        chatbotInput.value = '';
+      }
+    });
+  </script>
+  
+</body>
+</html>

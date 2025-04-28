@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fikr bildirish - Elbek Online Shop</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome kutubxonasi -->
+  <style>
+    body { font-family: 'Arial', sans-serif; background-color: #f4f4f9; display: flex; justify-content: center; align-items: center; height: 100vh; }
+    .feedback-container { background-color: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); width: 400px; text-align: center; }
+    .feedback-container h2 { margin-bottom: 20px; font-size: 24px; }
+    .chat { width: 100%; height: 300px; overflow-y: auto; border: 1px solid #ccc; margin-bottom: 20px; padding: 10px; display: flex; flex-direction: column; gap: 10px; }
+    .chat-message { display: flex; align-items: flex-start; }
+    .chat-message img { width: 40px; height: 40px; border-radius: 50%; margin-right: 10px; }
+    .message-content { background-color: #e0e0e0; padding: 10px; border-radius: 8px; max-width: 80%; }
+    .message-content.sent { background-color: #a8d0e6; align-self: flex-end; }
+    .message-user { font-weight: bold; color: #333; }
+    .input-field { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ccc; }
+    .submit-btn { width: 100%; padding: 10px; background-color: #2c3e50; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+    .submit-btn:hover { background-color: #34495e; }
+    .delete-btn { background-color: transparent; color: #e74c3c; border: none; font-size: 20px; cursor: pointer; margin-left: 10px; }
+    .delete-btn:hover { color: #c0392b; }
+    #alert { 
+      display: none; 
+      position: fixed; 
+      top: 50%; 
+      left: 50%; 
+      transform: translate(-50%, -50%); 
+      background-color: rgba(255, 0, 0, 0.8); 
+      color: white; 
+      padding: 20px; 
+      border-radius: 10px; 
+      font-size: 18px; 
+      text-align: center; 
+    }
+    #feedbackForm { display: block; }
+    .camera-icon {
+      position: absolute;
+      bottom: 5px;
+      right: 5px;
+      font-size: 20px;
+      color: #fff;
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 50%;
+      padding: 5px;
+      cursor: pointer;
+    }
+    .profile-img-container {
+      position: relative;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+    .camera-icon:hover {
+      background-color: #34495e;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ogohlantirish: Fikr yozish uchun login talab qilinadi -->
+  <div id="alert">CHATGA FIKR YOZISH UCHUN AVVAL REGISTRATSIYADAN O'ITING!</div>
+
+  <div class="feedback-container" id="feedbackContainer">
+    <h2>Fikr bildirish (Chat)</h2>
+    <p id="welcomeMessage"></p>
+    <div class="chat" id="chatBox"></div>
+    <div class="profile-img-container" id="profileImageContainer">
+      <img id="profileImage" src="https://via.placeholder.com/40" alt="Profile Image">
+      <span class="camera-icon" onclick="changeProfileImage()"><i class="fas fa-camera"></i></span>
+    </div>
+    <textarea id="comment" class="input-field" placeholder="Fikr yoki taklif yozing..." rows="5" required disabled></textarea>
+    <button id="submitFeedback" class="submit-btn" disabled>Yuborish</button>
+  </div>
+
+  <input type="file" id="imageUpload" style="display: none;" onchange="uploadImage()" accept="image/*">
+
+  <script>
+    const username = localStorage.getItem('username');
+    const alertMessage = document.getElementById('alert');
+    const feedbackContainer = document.getElementById('feedbackContainer');
+    const submitButton = document.getElementById('submitFeedback');
+    const commentField = document.getElementById('comment');
+    const chatBox = document.getElementById('chatBox');
+    const profileImage = document.getElementById('profileImage');
+    const imageUpload = document.getElementById('imageUpload');
+
+    if (!username) {
+      alertMessage.style.display = 'block'; // Ogohlantirishni ko'rsatish
+      feedbackContainer.style.display = 'none'; // Fikr yozish formasini yashirish
+    } else {
+      document.getElementById('welcomeMessage').innerText = `Salom, ${username}! Fikr bildiring.`;
+      document.getElementById('alert').style.display = 'none';
+      commentField.disabled = false;
+      submitButton.disabled = false;
+    }
+
+    // Kamera ikonkasini bosish orqali profil rasmni tanlash
+    function changeProfileImage() {
+      imageUpload.click();
+    }
+
+    // Foydalanuvchi yangi rasm yuklasa
+    function uploadImage() {
+      const file = imageUpload.files[0];
+      const reader = new FileReader();
+      reader.onloadend = function () {
+        profileImage.src = reader.result;
+        localStorage.setItem('userImage', reader.result); // Rasmni saqlash
+      };
+      if (file) {
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // Fikrlarni ko'rsatish
+    const displayMessages = () => {
+      let messages = JSON.parse(localStorage.getItem('messages') || '[]');
+      chatBox.innerHTML = '';
+      messages.forEach((msg, index) => {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('chat-message');
+        
+        // Foydalanuvchi rasm va ismi
+        const userImageElement = document.createElement('img');
+        userImageElement.src = localStorage.getItem('userImage') || 'https://via.placeholder.com/40';
+        const messageContentDiv = document.createElement('div');
+        messageContentDiv.classList.add('message-content');
+
+        // Fikr va foydalanuvchi ismi
+        messageContentDiv.innerHTML = `<span class="message-user">${msg.username}:</span> ${msg.comment}`;
+
+        // Agar foydalanuvchi o'z fikrini yozgan bo'lsa, fikri o'ng tomonda bo'ladi
+        if (msg.username === username) {
+          messageContentDiv.classList.add('sent'); // O'z fikri uchun alohida rang
+          const deleteButton = document.createElement('button');
+          deleteButton.classList.add('delete-btn');
+          deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
+          deleteButton.onclick = () => deleteMessage(index);
+          messageContentDiv.appendChild(deleteButton);
+        }
+
+        messageDiv.appendChild(userImageElement);
+        messageDiv.appendChild(messageContentDiv);
+        chatBox.appendChild(messageDiv);
+      });
+    };
+
+    // Fikrni o'chirish
+    const deleteMessage = (index) => {
+      let messages = JSON.parse(localStorage.getItem('messages') || '[]');
+      messages.splice(index, 1);
+      localStorage.setItem('messages', JSON.stringify(messages));
+      displayMessages();
+    };
+
+    // Fikr yuborish
+    document.getElementById('submitFeedback').addEventListener('click', () => {
+      const comment = document.getElementById('comment').value;
+      if (comment) {
+        let messages = JSON.parse(localStorage.getItem('messages') || '[]');
+        messages.push({ username: username, comment: comment });
+        localStorage.setItem('messages', JSON.stringify(messages));
+
+        displayMessages();
+        document.getElementById('comment').value = '';
+
+        fetch('https://api.telegram.org/botYOUR_BOT_TOKEN/sendMessage', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: 'YOUR_CHAT_ID',
+            text: `Yangi fikr:\nFoydalanuvchi: ${username}\nFikr: ${comment}`
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+        })
+        .catch(error => {
+          console.error('Telegramga yuborishda xatolik:', error);
+        });
+      }
+    });
+
+    // Fikrlarni dastlabki ko'rsatish
+    displayMessages();
+  </script>
+
+</body>
+</html>

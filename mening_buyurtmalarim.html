@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <title>Mening Buyurtmalarim</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #e9ecef;
+      margin: 0;
+      padding: 0;
+      color: #212529;
+    }
+    header {
+      background: linear-gradient(90deg, #007bff, #0056b3);
+      color: white;
+      padding: 25px;
+      text-align: center;
+      font-size: 30px;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .order-container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 25px;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+    .order-item {
+      display: flex;
+      background: #ffffff;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      padding: 25px;
+      align-items: center;
+      gap: 25px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .order-item:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    }
+    .order-item img {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 3px solid #dee2e6;
+    }
+    .order-info {
+      flex-grow: 1;
+    }
+    .order-info h3 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 700;
+      color: #343a40;
+    }
+    .order-info p {
+      margin: 6px 0;
+      font-size: 15px;
+      color: #495057;
+    }
+    .cancel-btn {
+      background: linear-gradient(90deg, #dc3545, #b02a37);
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+    .cancel-btn:hover {
+      background: linear-gradient(90deg, #b02a37, #842029);
+    }
+    .popup {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .popup-content {
+      background: #ffffff;
+      padding: 50px;
+      border-radius: 15px;
+      text-align: center;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
+    }
+    .popup-content h3 {
+      margin-bottom: 25px;
+      font-size: 24px;
+      color: #343a40;
+    }
+    .popup-content textarea {
+      width: 100%;
+      margin: 20px 0;
+      padding: 15px;
+      border: 1px solid #ced4da;
+      border-radius: 10px;
+      font-size: 15px;
+      resize: none;
+    }
+    .popup-content button {
+      margin: 12px;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: bold;
+    }
+    .popup-content .confirm {
+      background: linear-gradient(90deg, #dc3545, #b02a37);
+      color: white;
+    }
+    .popup-content .confirm:hover {
+      background: linear-gradient(90deg, #b02a37, #842029);
+    }
+    .popup-content .cancel {
+      background: #adb5bd;
+      color: #343a40;
+    }
+    .popup-content .cancel:hover {
+      background: #868e96;
+    }
+    .success-message {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(90deg, #28a745, #218838);
+      color: white;
+      padding: 18px 35px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: all 0.4s ease;
+      z-index: 9999;
+    }
+    .success-message.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .no-orders {
+      text-align: center;
+      color: #888;
+      font-size: 20px;
+      margin-top: 50px;
+      animation: fadeIn 1s ease;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+  </style>
+</head>
+<body>
+
+<header>Mening Buyurtmalarim</header>
+
+<div class="order-container" id="orderList">
+  <p class="no-orders">Buyurtmalar topilmadi</p>
+</div>
+
+<div class="popup" id="reasonPopup">
+  <div class="popup-content">
+    <h3>Buyurtmani bekor qilish sababi</h3>
+    <textarea id="cancelReason" rows="4" placeholder="Sababni yozing..."></textarea>
+    <div>
+      <button class="confirm" onclick="submitCancel()">Bekor qilish</button>
+      <button class="cancel" onclick="closePopup()">Yopish</button>
+    </div>
+  </div>
+</div>
+
+<div class="success-message" id="successMsg">
+  Buyurtmangiz muvaffaqiyatli bekor qilindi ✅
+</div>
+
+<script>
+  let currentIndex = null;
+
+  function loadOrders() {
+  const orders = JSON.parse(localStorage.getItem('orders')) || [];
+  const list = document.getElementById("orderList");
+  list.innerHTML = "";
+
+  if (orders.length === 0) {
+    list.innerHTML = '<p class="no-orders">Buyurtmalar topilmadi</p>';
+    return;
+  }
+
+  orders.forEach((order, i) => {
+    const productImage = order.productImage || "img/img"; // <-- Agar rasm bo‘lmasa, default rasm
+    const el = document.createElement('div');
+    el.className = "order-item";
+    el.innerHTML = `
+      <img src="${productImage}" alt="Tovar rasmi">
+      <div class="order-info">
+        <h3>${order.productName}</h3>
+        <p>Narxi: ${order.productPrice} so'm</p>
+        <p>Soni: ${order.quantity} ta</p>
+        <p>Ism: ${order.name}</p>
+        <p>Tel: ${order.phone}</p>
+        <p>Email: ${order.email}</p>
+        <p>Telegram: @${order.telegram}</p>
+        <p>Izoh: ${order.message || 'Yo‘q'}</p>
+      </div>
+      <button class="cancel-btn" onclick="openPopup(${i})">Bekor qilish</button>
+    `;
+    list.appendChild(el);
+  });
+}
+
+  function openPopup(i) {
+    currentIndex = i;
+    document.getElementById("reasonPopup").style.display = "flex";
+  }
+
+  function closePopup() {
+    document.getElementById("reasonPopup").style.display = "none";
+    document.getElementById("cancelReason").value = "";
+  }
+
+  function showSuccessMessage() {
+    const msg = document.getElementById("successMsg");
+    msg.classList.add("show");
+    setTimeout(() => {
+      msg.classList.remove("show");
+    }, 3000);
+  }
+
+  function submitCancel() {
+    const reason = document.getElementById("cancelReason").value.trim();
+    if (!reason) {
+      alert("Sababni yozing.");
+      return;
+    }
+
+    let orders = JSON.parse(localStorage.getItem("orders")) || [];
+    let canceledOrders = JSON.parse(localStorage.getItem("canceledOrders")) || [];
+
+    const canceled = orders.splice(currentIndex, 1)[0];
+    canceled.cancelReason = reason;
+    canceled.cancelTime = new Date().toLocaleString();
+
+    localStorage.setItem("orders", JSON.stringify(orders));
+    canceledOrders.push(canceled);
+    localStorage.setItem("canceledOrders", JSON.stringify(canceledOrders));
+
+    // Telegramga yuborish
+    fetch("https://api.telegram.org/bot7557876194:AAFx_XvTbaJzkBwfj7lKUt6Yauf2KvnooHc/sendMessage", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: "7702025887",
+        text: `❌ Buyurtma bekor qilindi:\n\n📦 Tovar: ${canceled.productName}\n🎨 Rang: ${canceled.selectedVariant}\n🔢 Soni: ${canceled.quantity}\n📞 Tel: ${canceled.phone}\n📧 Email: ${canceled.email}\n💬 Telegram: @${canceled.telegram}\n📝 Izoh: ${canceled.message || 'Yo‘q'}\n❗ Sabab: ${reason}\n🕒 Sana: ${canceled.cancelTime}`
+      })
+    });
+
+    showSuccessMessage();
+    loadOrders();
+    closePopup();
+  }
+
+  loadOrders();
+</script>
+</body>
+</html>
