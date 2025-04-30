@@ -325,6 +325,79 @@
 
 <!-- new cod -->
 
+
+
+<div style="text-align: center; font-family: Arial, sans-serif; margin-top: 50px;">
+  <h2 style="color: #4CAF50;">Saytga kirish</h2>
+  <input id="telegramId" placeholder="Telegram ID" style="padding: 10px; width: 80%; max-width: 300px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;"><br>
+  <button onclick="sendCode()" style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">Kod yuborish</button><br><br>
+
+  <input id="code" placeholder="Kod" style="padding: 10px; width: 80%; max-width: 300px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;"><br>
+  <button onclick="verifyCode()" style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">Tasdiqlash</button>
+</div>
+
+<script>
+  function sendCode() {
+    const telegramId = document.getElementById('telegramId').value;
+    if (!telegramId) {
+      alert('Telegram ID ni kiriting!');
+      return;
+    }
+    alert('Kod yuborildi! Telegram ID: ' + telegramId);
+    // Bu yerda kodni yuborish uchun serverga so'rov yuborishingiz mumkin
+  }
+
+  function verifyCode() {
+    const code = document.getElementById('code').value;
+    if (!code) {
+      alert('Kod ni kiriting!');
+      return;
+    }
+    alert('Kod tasdiqlandi! Kod: ' + code);
+    // Bu yerda kodni tasdiqlash uchun serverga so'rov yuborishingiz mumkin
+  }
+</script>
+<script>
+  let telegramId = "";
+
+  function sendCode() {
+    telegramId = document.getElementById("telegramId").value;
+    fetch("http://localhost:5000/send-code", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ telegram_id: telegramId })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === "sent") {
+        alert("Telegramga kod yuborildi.");
+      } else {
+        alert("ID noto‘g‘ri yoki ro‘yxatda yo‘q.");
+      }
+    });
+  }
+
+  function verifyCode() {
+    const code = document.getElementById("code").value;
+    fetch("http://localhost:5000/verify-code", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ telegram_id: telegramId, code: code })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === "ok") {
+        window.location.href = "home.html";
+      } else {
+        alert("Kod noto‘g‘ri.");
+      }
+    });
+  }
+</script>
+
+
+
+
   <script>
     // Katalog menyu funksiyasi
     function toggleMenu() {
