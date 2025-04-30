@@ -546,6 +546,39 @@
         chatbotInput.value = '';
       }
     });
+
+    // Add overlay text to each product
+    document.querySelectorAll('.product').forEach(product => {
+      const overlay = document.createElement('div');
+      overlay.textContent = 'ESHO';
+      overlay.style.position = 'absolute';
+      overlay.style.top = '0';
+      overlay.style.left = '0';
+      overlay.style.width = '100%';
+      overlay.style.height = '100%';
+      overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+      overlay.style.color = 'white';
+      overlay.style.display = 'flex';
+      overlay.style.alignItems = 'center';
+      overlay.style.justifyContent = 'center';
+      overlay.style.fontSize = '24px';
+      overlay.style.fontWeight = 'bold';
+      overlay.style.opacity = '0';
+      overlay.style.transition = 'opacity 0.3s ease';
+      overlay.style.pointerEvents = 'none';
+      overlay.style.borderRadius = '10px';
+      product.style.position = 'relative';
+      product.appendChild(overlay);
+
+      product.addEventListener('mouseenter', () => {
+        overlay.style.opacity = '1';
+      });
+
+      product.addEventListener('mouseleave', () => {
+        overlay.style.opacity = '0';
+      });
+    });
+    
   </script>
   
 </body>
