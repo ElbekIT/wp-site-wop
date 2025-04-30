@@ -8,21 +8,22 @@
   <style>
     body {
       font-family: 'Rubik', sans-serif;
-      background: linear-gradient(135deg, #74b9ff, #81ecec);
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
       padding: 20px;
       animation: fadeIn 1s ease-in-out;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      color: #000000;
         }
         #chatContainer {
       max-width: 600px;
       margin: 0 auto;
-      background: #fff;
+      background: rgba(209, 200, 200, 0.9);
       padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      border-radius: 15px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
       animation: slideIn 0.8s ease-out;
         }
         #messages {
@@ -32,31 +33,32 @@
       animation: fadeInUp 0.5s ease-in-out;
         }
         .message {
-      background: #f1f1f1;
-      padding: 10px;
+      background: #f9f9f9;
+      padding: 15px;
       margin-bottom: 10px;
-      border-radius: 8px;
+      border-radius: 10px;
       position: relative;
-      animation: popIn 0.3s ease-in-out;
+      animation: popIn 0.3s ease-in-out, messageSlideIn 0.5s ease-in-out;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         .message strong {
       display: block;
       margin-bottom: 5px;
-      color: #2c3e50;
+      color: #34495e;
         }
         .message button {
       position: absolute;
-      top: 5px;
-      right: 10px;
+      top: 10px;
+      right: 15px;
       background: transparent;
       border: none;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 16px;
       color: #888;
       transition: color 0.3s ease;
         }
         .message button:hover {
-      color: #000;
+      color: #2c3e50;
         }
         #inputArea {
       display: flex;
@@ -64,26 +66,26 @@
         }
         #messageInput {
       flex: 1;
-      padding: 10px;
-      border-radius: 8px;
+      padding: 12px;
+      border-radius: 10px;
       border: 1px solid #ccc;
       transition: border-color 0.3s ease;
         }
         #messageInput:focus {
-      border-color: #3498db;
+      border-color: #6a11cb;
       outline: none;
         }
         #sendBtn {
-      padding: 10px 20px;
-      background-color: #3498db;
+      padding: 12px 25px;
+      background-color: #6a11cb;
       color: white;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
       transition: background-color 0.3s ease, transform 0.2s ease;
         }
         #sendBtn:hover {
-      background-color: #2980b9;
+      background-color: #4e0ba1;
       transform: scale(1.05);
         }
         #deleteAccount {
@@ -91,64 +93,75 @@
       text-align: center;
         }
         #deleteAccount button {
-      background-color: red;
+      background-color: #e74c3c;
       color: white;
       border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
+      padding: 12px 25px;
+      border-radius: 10px;
       cursor: pointer;
       transition: background-color 0.3s ease, transform 0.2s ease;
         }
         #deleteAccount button:hover {
-      background-color: darkred;
+      background-color: #c0392b;
       transform: scale(1.05);
         }
         .topInfo {
       text-align: right;
       font-size: 14px;
       margin-bottom: 10px;
-      color: #666;
+      color: #ecf0f1;
         }
 
         @keyframes fadeIn {
       from {
-      opacity: 0;
+        opacity: 0;
       }
       to {
-      opacity: 1;
+        opacity: 1;
       }
         }
 
         @keyframes slideIn {
       from {
-      transform: translateY(-50px);
-      opacity: 0;
+        transform: translateY(-50px);
+        opacity: 0;
       }
       to {
-      transform: translateY(0);
-      opacity: 1;
+        transform: translateY(0);
+        opacity: 1;
       }
         }
 
         @keyframes fadeInUp {
       from {
-      transform: translateY(20px);
-      opacity: 0;
+        transform: translateY(20px);
+        opacity: 0;
       }
       to {
-      transform: translateY(0);
-      opacity: 1;
+        transform: translateY(0);
+        opacity: 1;
       }
         }
 
         @keyframes popIn {
       from {
-      transform: scale(0.9);
-      opacity: 0;
+        transform: scale(0.9);
+        opacity: 0;
       }
       to {
-      transform: scale(1);
-      opacity: 1;
+        transform: scale(1);
+        opacity: 1;
+      }
+        }
+
+        @keyframes messageSlideIn {
+      from {
+        transform: translateX(-50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
       }
         }
   </style>
@@ -186,7 +199,7 @@
         <div id="chatContainer">
           <h2>WepIT Chat Xizmati</h2>
           <p style="color: red; font-weight: bold;">Chatdan foydalanish uchun avval ro'yxatdan o'ting yoki login qiling.</p>
-          <a href="login.html" style="display: inline-block; margin-top: 10px; color: #3498db;">👉 Login sahifasiga o'tish</a>
+            <button onclick="window.location.href='login.html'" style="display: inline-block; margin-top: 10px; background-color: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">👉 Registratsiyadan O'tish</button>
         </div>
       `;
       throw new Error("Foydalanuvchi tizimga kirmagan.");
@@ -281,5 +294,33 @@
 
     renderMessages();
   </script>
+
+  <script>
+    // Disable right-click
+    document.addEventListener('contextmenu', event => event.preventDefault());
+
+    // Disable F12 and Ctrl+Shift+I (Developer Tools)
+    document.addEventListener('keydown', event => {
+      if (event.key === 'F12' || (event.ctrlKey && event.shiftKey && event.key === 'I')) {
+        event.preventDefault();
+      }
+    });
+
+    // Disable viewing source with Ctrl+U and Ctrl+Г (Russian keyboard layout)
+    document.addEventListener('keydown', event => {
+      if ((event.ctrlKey && event.key === 'u') || (event.ctrlKey && event.key === 'г')) {
+        event.preventDefault();
+      }
+    });
+
+    // Disable text selection
+    document.addEventListener('selectstart', event => event.preventDefault());
+
+    // Disable copying
+    document.addEventListener('copy', event => event.preventDefault());
+  </script>
+
+
+
 </body>
 </html>

@@ -613,5 +613,35 @@
 
   </script>
   
+
+
+
+
+
+  <script>
+    // Disable right-click
+    document.addEventListener('contextmenu', event => event.preventDefault());
+
+    // Disable F12 and Ctrl+Shift+I (Developer Tools)
+    document.addEventListener('keydown', event => {
+      if (event.key === 'F12' || (event.ctrlKey && event.shiftKey && event.key === 'I')) {
+        event.preventDefault();
+      }
+    });
+
+    // Disable viewing source with Ctrl+U and Ctrl+Г (Russian keyboard layout)
+    document.addEventListener('keydown', event => {
+      if ((event.ctrlKey && event.key === 'u') || (event.ctrlKey && event.key === 'г')) {
+        event.preventDefault();
+      }
+    });
+
+    // Disable text selection
+    document.addEventListener('selectstart', event => event.preventDefault());
+
+    // Disable copying
+    document.addEventListener('copy', event => event.preventDefault());
+  </script>
+
 </body>
 </html>
