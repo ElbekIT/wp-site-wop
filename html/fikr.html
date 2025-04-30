@@ -1,427 +1,285 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fikr bildirish - Elbek Online Shop</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WepIT Chat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Arial', sans-serif;
-      background-color: #e3f2fd;
+      font-family: 'Rubik', sans-serif;
+      background: linear-gradient(135deg, #74b9ff, #81ecec);
+      padding: 20px;
+      animation: fadeIn 1s ease-in-out;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      margin: 0;
-      animation: fadeIn 1.5s ease-in-out;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.9); }
-      to { opacity: 1; transform: scale(1); }
-    }
-    .feedback-container {
-      background: linear-gradient(135deg, #ff6f61, #ff8e53);
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-      width: 420px;
-      text-align: center;
-      color: white;
-      animation: slideIn 1s ease-out;
-    }
-    @keyframes slideIn {
-      from { transform: translateY(-50px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-    .feedback-container h2 {
-      margin-bottom: 20px;
-      font-size: 28px;
-      font-weight: bold;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    }
-    .chat {
-      width: 100%;
-      height: 320px;
+        }
+        #chatContainer {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      animation: slideIn 0.8s ease-out;
+        }
+        #messages {
+      max-height: 400px;
       overflow-y: auto;
-      border: 1px solid rgba(255, 255, 255, 0.4);
       margin-bottom: 20px;
+      animation: fadeInUp 0.5s ease-in-out;
+        }
+        .message {
+      background: #f1f1f1;
       padding: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      background-color: rgba(255, 255, 255, 0.15);
-      border-radius: 10px;
-    }
-    .chat-message { display: flex; align-items: flex-start; }
-    .chat-message img {
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
-      margin-right: 12px;
-      border: 3px solid white;
-    }
-    .message-content {
-      background-color: rgba(255, 255, 255, 0.25);
-      padding: 12px;
-      border-radius: 10px;
-      max-width: 85%;
-      color: white;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-    .message-content.sent {
-      background-color: rgba(0, 150, 136, 0.9);
-      align-self: flex-end;
-    }
-    .message-user {
-      font-weight: bold;
-      color: #ffeb3b;
-      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-    }
-    .input-field {
-      width: 100%;
-      padding: 14px;
-      margin: 12px 0;
-      border-radius: 10px;
-      border: none;
-      background-color: rgba(255, 255, 255, 0.25);
-      color: white;
-      font-size: 16px;
-      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
-    }
-    .input-field::placeholder { color: rgba(255, 255, 255, 0.7); }
-    .submit-btn {
-      width: 100%;
-      padding: 14px;
-      background-color: #ff7043;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 18px;
-      font-weight: bold;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    }
-    .submit-btn:hover {
-      background-color: #f4511e;
-      transform: translateY(-2px);
-    }
-    .delete-btn {
-      background-color: transparent;
-      color: #ff5252;
-      border: none;
-      font-size: 20px;
-      cursor: pointer;
-      margin-left: 10px;
-      transition: color 0.3s ease;
-    }
-    .delete-btn:hover { color: #d32f2f; }
-    #alert {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: rgba(255, 87, 34, 0.95);
-      color: white;
-      padding: 25px;
-      border-radius: 15px;
-      font-size: 20px;
-      text-align: center;
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
-    }
-    .camera-icon {
-      position: absolute;
-      bottom: 5px;
-      right: 5px;
-      font-size: 22px;
-      color: #ffeb3b;
-      background-color: rgba(0, 0, 0, 0.7);
-      border-radius: 50%;
-      padding: 6px;
-      cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-    }
-    .camera-icon:hover {
-      background-color: rgba(0, 0, 0, 0.9);
-      transform: scale(1.1);
-    }
-    .profile-img-container {
+      margin-bottom: 10px;
+      border-radius: 8px;
       position: relative;
-      width: 55px;
-      height: 55px;
-      border-radius: 50%;
-      overflow: hidden;
-      margin: 0 auto 12px;
-      border: 3px solid white;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    }
-    .auth-form {
+      animation: popIn 0.3s ease-in-out;
+        }
+        .message strong {
+      display: block;
+      margin-bottom: 5px;
+      color: #2c3e50;
+        }
+        .message button {
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      color: #888;
+      transition: color 0.3s ease;
+        }
+        .message button:hover {
+      color: #000;
+        }
+        #inputArea {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    .auth-form input {
-      width: 100%;
+      gap: 10px;
+        }
+        #messageInput {
+      flex: 1;
       padding: 10px;
-      margin: 8px 0;
+      border-radius: 8px;
       border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 16px;
-      background-color: rgba(255, 255, 255, 0.2);
-      color: white;
-    }
-    .auth-form button {
-      width: 100%;
-      padding: 12px;
-      background-color: #4CAF50;
+      transition: border-color 0.3s ease;
+        }
+        #messageInput:focus {
+      border-color: #3498db;
+      outline: none;
+        }
+        #sendBtn {
+      padding: 10px 20px;
+      background-color: #3498db;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
       cursor: pointer;
-      font-size: 18px;
-      transition: background-color 0.3s ease;
-    }
-    .auth-form button:hover {
-      background-color: #3e8e41;
-    }
-    #auth-message {
-      color: yellow;
-      margin-top: 10px;
-    }
+      transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        #sendBtn:hover {
+      background-color: #2980b9;
+      transform: scale(1.05);
+        }
+        #deleteAccount {
+      margin-top: 20px;
+      text-align: center;
+        }
+        #deleteAccount button {
+      background-color: red;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        #deleteAccount button:hover {
+      background-color: darkred;
+      transform: scale(1.05);
+        }
+        .topInfo {
+      text-align: right;
+      font-size: 14px;
+      margin-bottom: 10px;
+      color: #666;
+        }
 
+        @keyframes fadeIn {
+      from {
+      opacity: 0;
+      }
+      to {
+      opacity: 1;
+      }
+        }
+
+        @keyframes slideIn {
+      from {
+      transform: translateY(-50px);
+      opacity: 0;
+      }
+      to {
+      transform: translateY(0);
+      opacity: 1;
+      }
+        }
+
+        @keyframes fadeInUp {
+      from {
+      transform: translateY(20px);
+      opacity: 0;
+      }
+      to {
+      transform: translateY(0);
+      opacity: 1;
+      }
+        }
+
+        @keyframes popIn {
+      from {
+      transform: scale(0.9);
+      opacity: 0;
+      }
+      to {
+      transform: scale(1);
+      opacity: 1;
+      }
+        }
   </style>
 </head>
 <body>
+  <div id="chatContainer">
+    <h2>WepIT Chat Xizmati</h2>
+    <div class="topInfo" id="userInfo"></div>
+    <div id="messages"></div>
 
-  <!-- Ogohlantirish: Fikr yozish uchun login talab qilinadi -->
-  <div id="alert">CHATGA FIKR YOZISH UCHUN AVVAL ISMINGIZNI KIRITING!</div>
-
-  <div class="feedback-container" id="feedbackContainer">
-    <h2>Fikr bildirish (Chat)</h2>
-    <p id="welcomeMessage"></p>
-    <div class="chat" id="chatBox"></div>
-
-    <div class="profile-img-container" id="profileImageContainer">
-      <img id="profileImage" src="https://via.placeholder.com/40" alt="Profile Image">
-      <span class="camera-icon" onclick="changeProfileImage()"><i class="fas fa-camera"></i></span>
+    <div id="inputArea">
+      <input type="text" id="messageInput" placeholder="Xabar yozing..." />
+      <button id="sendBtn">Yuborish</button>
     </div>
-    <textarea id="comment" class="input-field" placeholder="Fikr yoki taklif yozing..." rows="5" required disabled></textarea>
-    <button id="submitFeedback" class="submit-btn" disabled>Yuborish</button>
+
+    <div id="deleteAccount">
+      <button onclick="deleteAccount()">Akkauntni o'chirish</button>
+    </div>
   </div>
 
-    <div id="auth-form-container" style="display:none;">
-    <form id="auth-form" class="auth-form">
-        <input type="text" id="username" placeholder="Ismingiz" required>
-        <button type="button" onclick="signInAnonymously()">Kirish</button>
-        <p id="auth-message"></p>
-    </form>
-</div>
+  <script>
+    const BOT_TOKEN = '7607444887:AAHZu9rRTIMIuq4t__6dVkcwn64CXlDvy5w'; // <-- BU YERGA BOT TOKENINGIZNI QO'YING
+    const CHAT_ID = '7833115003';     // <-- BU YERGA ADMIN YOKI GURUHINGIZ ID'sini yozing
 
-  <input type="file" id="imageUpload" style="display: none;" onchange="uploadImage()" accept="image/*">
+    const messagesEl = document.getElementById('messages');
+    const input = document.getElementById('messageInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const userInfo = document.getElementById('userInfo');
 
-  <script type="module">
-    // Import the functions you need from the SDKs you need
-    import { initializeApp } from "firebase/app";
-    import { getAnalytics } from "firebase/analytics";
-    import { getDatabase, ref, push, onValue, remove } from "firebase/database";
-    import { getAuth, signInAnonymously, onAuthStateChanged } from "firebase/auth";
-    // TODO: Add SDKs for Firebase products that you want to use
-    // https://firebase.google.com/docs/web/setup#available-libraries
+    const username = localStorage.getItem('username');
+    const loggedIn = localStorage.getItem('loggedIn') === 'true';
 
-    // Your web app's Firebase configuration
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-    const firebaseConfig = {
-      apiKey: "AIzaSyB9WxjdMN0X5MOTsyRc8h35V7BJ6GXvfTU",
-      authDomain: "esho-uz-chat.firebaseapp.com",
-      databaseURL: "https://esho-uz-chat-default-rtdb.firebaseio.com",
-      projectId: "esho-uz-chat",
-      storageBucket: "esho-uz-chat.firebasestorage.app",
-      messagingSenderId: "903758998725",
-      appId: "1:903758998725:web:ef9386490c75c21435d4ac",
-      measurementId: "G-NXC66EZPR2"
-    };
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-    const database = getDatabase(app);
-    const messagesRef = ref(database, 'messages');
-    const auth = getAuth(app);
-
-    const alertMessage = document.getElementById('alert');
-    const feedbackContainer = document.getElementById('feedbackContainer');
-    const submitButton = document.getElementById('submitFeedback');
-    const commentField = document.getElementById('comment');
-    const chatBox = document.getElementById('chatBox');
-    const profileImage = document.getElementById('profileImage');
-    const imageUpload = document.getElementById('imageUpload');
-    const authFormContainer = document.getElementById('auth-form-container');
-    const authForm = document.getElementById('auth-form');
-    const authMessage = document.getElementById('auth-message');
-
-    // ------------------  Autentifikatsiya funksiyalari ------------------
-
-    const signInAnonymously = () => {
-        const username = document.getElementById('username').value;
-        if (!username) {
-          authMessage.innerText = 'Iltimos, ismingizni kiriting.';
-          return;
-        }
-
-        signInAnonymously(auth)
-            .then(() => {
-                // Foydalanuvchi muvaffaqiyatli tizimga kirdi
-                authMessage.innerText = 'Tizimga kirdingiz!';
-                localStorage.setItem('username', username);  // Ismni saqlash
-                showChatInterface();
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                authMessage.innerText = `Xatolik: ${errorMessage}`;
-                console.error('Login error:', errorCode, errorMessage);
-            });
-    };
-
-    // ------------------ UI Funksiyalari ------------------
-    const showChatInterface = () => {
-        authFormContainer.style.display = 'none';
-        feedbackContainer.style.display = 'block';
-        commentField.disabled = false;
-        submitButton.disabled = false;
-        document.getElementById('alert').style.display = 'none';
-    };
-
-    const showAuthForm = () => {
-        authFormContainer.style.display = 'block';
-        feedbackContainer.style.display = 'none';
-        commentField.disabled = true;
-        submitButton.disabled = true;
-    };
-
-
-    // ------------------  Firebase Auth kuzatuvi ------------------
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-          // Foydalanuvchi tizimga kirgan
-          showChatInterface();
-          const username = localStorage.getItem('username'); // Ismni olish
-          document.getElementById('welcomeMessage').innerText = `Salom, ${username}! Fikr bildiring.`;
-          //  localStorage.setItem('username', user.uid); // anonim foydalanuvchilar uchun ham ishlatiladi
-      } else {
-          // Foydalanuvchi tizimga kirmagan
-          showAuthForm();
-          localStorage.removeItem('username'); // Agar foydalanuvchi tizimdan chiqsa, username ni o'chirish
-          document.getElementById('welcomeMessage').innerText = ''; // Xush kelibsiz xabarini tozalash
-      }
-      displayMessages(); // Har doim xabarlarni yangilash
-    });
-
-    // ------------------  Qolgan kodlar (avvalgidek) ------------------
-
-    // Kamera ikonkasini bosish orqali profil rasmni tanlash
-    function changeProfileImage() {
-      imageUpload.click();
+    if (!loggedIn || !username) {
+      document.body.innerHTML = `
+        <div id="chatContainer">
+          <h2>WepIT Chat Xizmati</h2>
+          <p style="color: red; font-weight: bold;">Chatdan foydalanish uchun avval ro'yxatdan o'ting yoki login qiling.</p>
+          <a href="login.html" style="display: inline-block; margin-top: 10px; color: #3498db;">👉 Login sahifasiga o'tish</a>
+        </div>
+      `;
+      throw new Error("Foydalanuvchi tizimga kirmagan.");
     }
 
-    // Foydalanuvchi yangi rasm yuklasa
-    function uploadImage() {
-      const file = imageUpload.files[0];
-      const reader = new FileReader();
-      reader.onloadend = function () {
-        profileImage.src = reader.result;
-        localStorage.setItem('userImage', reader.result); // Rasmni saqlash
-      };
-      if (file) {
-        reader.readAsDataURL(file);
-      }
-    }
+    userInfo.textContent = `Siz: ${username}`;
 
-    // Fikrlarni ko'rsatish
-    const displayMessages = () => {
-      onValue(messagesRef, (snapshot) => {
-        const data = snapshot.val();
-        const messages = data ? Object.entries(data) : [];
-        chatBox.innerHTML = '';
-        messages.forEach(([key, msg]) => {
-          const messageDiv = document.createElement('div');
-          messageDiv.classList.add('chat-message');
+    let messages = JSON.parse(localStorage.getItem('chatMessages')) || [];
 
-          // Foydalanuvchi rasm va ismi
-          const userImageElement = document.createElement('img');
-          userImageElement.src = localStorage.getItem('userImage') || 'https://via.placeholder.com/40';
-          const messageContentDiv = document.createElement('div');
-          messageContentDiv.classList.add('message-content');
-
-          // Fikr va foydalanuvchi ismi
-          messageContentDiv.innerHTML = `<span class="message-user">${msg.username}:</span> ${msg.comment}`;
-
-          // Agar foydalanuvchi o'z fikrini yozgan bo'lsa, fikri o'ng tomonda bo'ladi
-          if (msg.username === localStorage.getItem('username')) {
-            messageContentDiv.classList.add('sent');
-            const deleteButton = document.createElement('button');
-            deleteButton.classList.add('delete-btn');
-            deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
-            deleteButton.onclick = () => deleteMessage(key);
-            messageContentDiv.appendChild(deleteButton);
-          }
-
-          messageDiv.appendChild(userImageElement);
-          messageDiv.appendChild(messageContentDiv);
-          chatBox.appendChild(messageDiv);
-        });
+    function renderMessages() {
+      messagesEl.innerHTML = '';
+      messages.forEach((msg, index) => {
+        const div = document.createElement('div');
+        div.className = 'message';
+        div.innerHTML = `
+          <strong>${msg.user}:</strong>
+          <span>${msg.text}</span>
+          ${msg.user === username ? `
+            <button onclick="editMessage(${index})" title="Tahrirlash">✏️</button>
+            <button onclick="deleteMessage(${index})" title="O‘chirish">🗑️</button>
+          ` : ''}
+        `;
+        messagesEl.appendChild(div);
       });
-    };
+    }
 
-    // Fikrni o'chirish
-    const deleteMessage = (messageKey) => {
-        remove(ref(database, `messages/${messageKey}`))
-        .then(() => {
-            console.log("Message o'chirildi");
-        })
-        .catch((error) => {
-            console.error("O'chirishda xatolik:", error);
-        });
-    };
+    function sendMessage() {
+      const text = input.value.trim();
+      if (text) {
+        const messageObj = { user: username, text };
+        messages.push(messageObj);
+        localStorage.setItem('chatMessages', JSON.stringify(messages));
+        input.value = '';
+        renderMessages();
 
-    // Fikr yuborish
-    document.getElementById('submitFeedback').addEventListener('click', () => {
-      const comment = document.getElementById('comment').value;
-      if (comment) {
-          const username = localStorage.getItem('username');  // Foydalanuvchi ismini olamiz
-        // Firebase ga xabar yuborish
-        push(messagesRef, {
-          username: username,
-          comment: comment,
-          timestamp: Date.now()
-        });
-
-        document.getElementById('comment').value = '';
-
-        fetch('https://api.telegram.org/bot7557876194:AAFx_XvTbaJzkBwfj7lKUt6Yauf2KvnooHc/sendMessage', {
+        // Telegramga yuborish
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            chat_id: '7702025887',
-            text: `Yangi fikr:\nFoydalanuvchi: ${username}\nFikr: ${comment}`
+            chat_id: CHAT_ID,
+            text: `🗣 Yangi xabar:\n👤 ${username}\n💬 ${text}`
           })
-        })
-        .then(response => response.json())
-        .then(data => {
-          console.log(data);
-        })
-        .catch(error => {
-          console.error('Telegramga yuborishda xatolik:', error);
         });
       }
+    }
+
+    function deleteMessage(index) {
+      if (messages[index].user === username) {
+        const deletedMessage = messages[index].text;
+        messages.splice(index, 1);
+        localStorage.setItem('chatMessages', JSON.stringify(messages));
+        renderMessages();
+
+        // Telegramga o‘chirildi deb yuborish
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: CHAT_ID,
+            text: `🗑 Xabar o‘chirildi:\n👤 ${username}\n❌ ${deletedMessage}`
+          })
+        });
+      }
+    }
+
+    function editMessage(index) {
+      if (messages[index].user === username) {
+        const newText = prompt("Yangi matnni kiriting:", messages[index].text);
+        if (newText !== null && newText.trim() !== '') {
+          messages[index].text = newText.trim();
+          localStorage.setItem('chatMessages', JSON.stringify(messages));
+          renderMessages();
+        }
+      }
+    }
+
+    function deleteAccount() {
+      if (confirm("Rostdan ham akkauntingizni o'chirmoqchimisiz?")) {
+        localStorage.removeItem('username');
+        localStorage.removeItem('password');
+        localStorage.removeItem('loggedIn');
+        alert("Akkaunt o'chirildi.");
+        window.location.href = "login.html";
+      }
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') sendMessage();
     });
 
-    // Fikrlarni dastlabki ko'rsatish
-    // displayMessages();
+    renderMessages();
   </script>
-
 </body>
 </html>

@@ -260,11 +260,11 @@
     localStorage.setItem("canceledOrders", JSON.stringify(canceledOrders));
 
     // Telegramga yuborish
-    fetch("https://api.telegram.org/bot7557876194:AAFx_XvTbaJzkBwfj7lKUt6Yauf2KvnooHc/sendMessage", {
+    fetch("https://api.telegram.org/bot7607444887:AAHZu9rRTIMIuq4t__6dVkcwn64CXlDvy5w/sendMessage", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        chat_id: "7702025887",
+        chat_id: "7833115003",
         text: `❌ Buyurtma bekor qilindi:\n\n📦 Tovar: ${canceled.productName}\n🎨 Rang: ${canceled.selectedVariant}\n🔢 Soni: ${canceled.quantity}\n📞 Tel: ${canceled.phone}\n📧 Email: ${canceled.email}\n💬 Telegram: @${canceled.telegram}\n📝 Izoh: ${canceled.message || 'Yo‘q'}\n❗ Sabab: ${reason}\n🕒 Sana: ${canceled.cancelTime}`
       })
     });

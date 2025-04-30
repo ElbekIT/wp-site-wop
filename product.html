@@ -307,7 +307,7 @@
 
     urlToFile(imageUrl, "product.jpg", "image/jpeg").then(file => {
       const formData = new FormData();
-      formData.append("chat_id", "7702025887"); 
+      formData.append("chat_id", "7833115003"); 
       formData.append("photo", file);
       formData.append("caption", ` 
 <b>🛒 Yangi buyurtma!</b>
@@ -324,7 +324,7 @@
       `.trim());
       formData.append("parse_mode", "HTML");
 
-      fetch("https://api.telegram.org/bot7557876194:AAFx_XvTbaJzkBwfj7lKUt6Yauf2KvnooHc/sendPhoto", { 
+      fetch("https://api.telegram.org/bot7607444887:AAHZu9rRTIMIuq4t__6dVkcwn64CXlDvy5w/sendPhoto", { 
         method: "POST",
         body: formData
       })
