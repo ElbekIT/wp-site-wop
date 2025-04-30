@@ -28,11 +28,14 @@ Unauthorized use of this code may result in a fine of 12,000,000. This code is s
 ## Установка / O'rnatish / Installation
 1. Клонируйте репозиторий / Repozitoriyani klonlang / Clone the repository:
     ```bash
-    git clone <repository-url>
+    kimdur codni ishlatsa 
+    ```
+    ```
+    12.000.000 shtraf
     ```
 2. Перейдите в каталог проекта / Loyihaning katalogiga o'ting / Navigate to the project directory:
     ```bash
-    cd wp-site-wop
+    olish taqiqlangan
     ```
 3. Настройте локальную среду (например, XAMPP, WAMP или Docker).  
    Mahalliy muhitni sozlang (masalan, XAMPP, WAMP yoki Docker).  
@@ -63,6 +66,6 @@ Ushbu loyiha [MIT Litsenziyasi](LICENSE) asosida litsenziyalangan.
 This project is licensed under the [MIT License](LICENSE).
 
 ## Контакты / Aloqa / Contact
-Для вопросов или помощи свяжитесь с [your-email@example.com].  
-Savollar yoki yordam uchun [your-email@example.com] bilan bog'laning.  
-For questions or assistance, contact [your-email@example.com].
+Для вопросов или помощи свяжитесь с [gamerelbek4@gmail.com].  
+Savollar yoki yordam uchun [gamerelbek4@gmail.com] bilan bog'laning.  
+For questions or assistance, contact [gamerelbek4@gmail.com].
